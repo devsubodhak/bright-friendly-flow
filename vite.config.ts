@@ -14,8 +14,5 @@ export default defineConfig({
   },
   nitro: true,
   vite: {
-    ssr: {
-      noExternal: [/supabase/, 'tslib']
-    }
   }
 });
