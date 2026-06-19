@@ -13,4 +13,9 @@ export default defineConfig({
     server: { entry: "server" },
   },
   nitro: true,
+  vite: {
+    ssr: {
+      noExternal: ['@supabase/supabase-js', '@supabase/functions-js', 'tslib']
+    }
+  }
 });
