@@ -1,6 +1,6 @@
 import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
-import { c as fmtWhen, m as useCrm, s as dispoLabel } from "./store-CmcNzmGW.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/team-yBaO7g0S.js
+import { c as fmtWhen, m as useCrm, s as dispoLabel } from "./store-DYE6C_dQ.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/team-C9cTMoBE.js
 var import_jsx_runtime = require_jsx_runtime();
 function TeamPage() {
 	const { db, user, contact, deleteCall } = useCrm();
