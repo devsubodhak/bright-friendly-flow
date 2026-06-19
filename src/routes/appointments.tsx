@@ -7,7 +7,7 @@ export const Route = createFileRoute("/appointments")({
 });
 
 function AppointmentsPage() {
-  const { db, matchSearch, contact, user, markApptDone } = useCrm();
+  const { db, matchSearch, contact, user, markApptDone, cancelAppointment, deleteAppointment } = useCrm();
   const list = db.appointments
     .filter((a) => { const c = contact(a.contactId); return c ? matchSearch(c) : true; })
     .slice()
@@ -23,8 +23,9 @@ function AppointmentsPage() {
         const c = contact(a.contactId) ?? { name: "—", company: "" };
         const o = user(a.userId);
         const d = new Date(a.at);
+        const statusClass = a.status === "done" ? "done" : a.status === "cancelled" ? "cancelled" : "";
         return (
-          <div key={a.id} className={`appt ${a.status === "done" ? "done" : ""}`} style={{ ["--d" as string]: `${i * 0.04}s` }}>
+          <div key={a.id} className={`appt ${statusClass}`} style={{ ["--d" as string]: `${i * 0.04}s` }}>
             <div className="date">
               <div className="d">{d.getDate()}</div>
               <div className="m">{d.toLocaleDateString([], { month: "short" })}</div>
@@ -39,10 +40,26 @@ function AppointmentsPage() {
               </div>
               {a.notes && <div className="det" style={{ marginTop: 5 }}>{a.notes}</div>}
             </div>
-            <div style={{ display: "flex", gap: 7 }}>
-              {a.status === "scheduled"
-                ? <button className="btn sm" onClick={() => markApptDone(a.id)}>Mark done</button>
-                : <span className="pill good">Done</span>}
+            <div style={{ display: "flex", gap: 7, alignItems: "center" }}>
+              {a.status === "scheduled" && (
+                <>
+                  <button className="btn sm" onClick={() => markApptDone(a.id)}>Mark done</button>
+                  <button className="btn sm warn" onClick={() => cancelAppointment(a.id)}>Cancel</button>
+                  <button className="del-x" onClick={() => deleteAppointment(a.id)} title="Delete appointment">×</button>
+                </>
+              )}
+              {a.status === "done" && (
+                <>
+                  <span className="pill good">Done</span>
+                  <button className="del-x" onClick={() => deleteAppointment(a.id)} title="Delete appointment">×</button>
+                </>
+              )}
+              {a.status === "cancelled" && (
+                <>
+                  <span className="pill" style={{ background: "var(--amber-wash)", color: "var(--amber)" }}>Cancelled</span>
+                  <button className="del-x" onClick={() => deleteAppointment(a.id)} title="Delete appointment">×</button>
+                </>
+              )}
             </div>
           </div>
         );

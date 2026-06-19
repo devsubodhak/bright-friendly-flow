@@ -10,7 +10,7 @@ export const Route = createFileRoute("/pipeline")({
 });
 
 function PipelinePage() {
-  const { db, matchSearch, user, moveStage } = useCrm();
+  const { db, matchSearch, user, moveStage, deleteContact } = useCrm();
   const dragRef = useRef<string | null>(null);
 
   return (
@@ -36,6 +36,7 @@ function PipelinePage() {
                   onDragStart={(e) => { dragRef.current = c.id; e.currentTarget.classList.add("dragging"); }}
                   onDragEnd={(e) => e.currentTarget.classList.remove("dragging")}
                 >
+                  <button className="del-x del-card" onClick={() => deleteContact(c.id)} title="Delete contact">×</button>
                   <div className="dn">{c.name}</div>
                   <div className="dco">{c.company}</div>
                   <div className="dfoot">

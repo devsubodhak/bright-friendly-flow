@@ -3,7 +3,7 @@ import { DISPOSITIONS, SERVICES, STAGES } from "./types";
 export const DAY = 86400000;
 
 export function uid() {
-  return "id" + Math.random().toString(36).slice(2, 9);
+  return crypto.randomUUID();
 }
 
 export function svc(id: string) {

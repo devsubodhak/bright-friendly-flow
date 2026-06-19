@@ -27,11 +27,33 @@ export function openContactModal(contact: Contact | null) { opener?.({ contact: 
 export function openLogCallModal(contact: Contact) { opener?.({ call: { contact } }); }
 
 export function AppShell() {
-  const { db, user, search, setSearch, setCurrentUser } = useCrm();
+  const { db, isLoading, user, search, setSearch, setCurrentUser } = useCrm();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const page = PAGES[pathname] ?? { title: "Univerz CRM", crumb: "" };
   const [modal, setModal] = useState<ModalState>({});
   opener = setModal;
+
+  if (isLoading) {
+    return (
+      <div className="loader-screen">
+        <div className="loader-card">
+          <div className="loader-logo-wrap">
+            <div className="loader-logo-ring"></div>
+            <img src="/src/logo.png" alt="Univerz Logo" className="loader-logo" />
+          </div>
+          <h2 className="loader-title">Univerz CRM</h2>
+          <div className="loader-subtitle">Securing Connection</div>
+          <div className="loader-bar">
+            <div className="loader-progress"></div>
+          </div>
+          <div className="loader-status">
+            <span className="loader-dot"></span>
+            <span>Syncing database tables…</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const me = user(db.currentUserId);
 
@@ -57,7 +79,7 @@ export function AppShell() {
       <aside className="side">
         <div className="brand">
           <div className="mark">
-            <div className="glyph">U</div>
+            <img src="/src/logo.png" alt="Univerz Logo" className="brand-logo" />
             <div>
               <div className="name">Univerz CRM</div>
               <div className="sub">calls &amp; appointments</div>

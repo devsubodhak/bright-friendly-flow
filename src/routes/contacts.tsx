@@ -9,7 +9,7 @@ export const Route = createFileRoute("/contacts")({
 });
 
 function ContactsPage() {
-  const { db, matchSearch, user } = useCrm();
+  const { db, matchSearch, user, deleteContact } = useCrm();
   const rows = db.contacts.filter(matchSearch)
     .slice()
     .sort((a, b) => (a.nextCallAt ?? 9e15) - (b.nextCallAt ?? 9e15));
@@ -43,7 +43,8 @@ function ContactsPage() {
                 </td>
                 <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                   <button className="btn sm" onClick={() => openLogCallModal(c)}>Call</button>{" "}
-                  <button className="btn ghost sm" onClick={() => openContactModal(c)}>Edit</button>
+                  <button className="btn ghost sm" onClick={() => openContactModal(c)}>Edit</button>{" "}
+                  <button className="del-x" onClick={() => deleteContact(c.id)} title="Delete contact">×</button>
                 </td>
               </tr>
             );

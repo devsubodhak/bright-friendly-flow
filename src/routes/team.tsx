@@ -8,21 +8,27 @@ export const Route = createFileRoute("/team")({
 });
 
 function TeamPage() {
-  const { db, user, contact } = useCrm();
+  const { db, user, contact, deleteCall } = useCrm();
   const today = new Date().toDateString();
 
   const acts = [
     ...db.calls.map((c) => ({
-      t: c.at, txt: `${user(c.userId).name} called ${contact(c.contactId)?.name ?? "—"} — ${dispoLabel(c.disposition)}`,
+      id: c.id,
+      kind: "call" as const,
+      t: c.at,
+      txt: `${user(c.userId).name} called ${contact(c.contactId)?.name ?? "—"} — ${dispoLabel(c.disposition)}`,
     })),
     ...db.appointments.map((a) => ({
-      t: a.at, txt: `${user(a.userId).name} has ${a.title} with ${contact(a.contactId)?.name ?? "—"}`,
+      id: a.id,
+      kind: "appt" as const,
+      t: a.at,
+      txt: `${user(a.userId).name} has ${a.title} with ${contact(a.contactId)?.name ?? "—"}`,
     })),
-  ].sort((a, b) => b.t - a.t).slice(0, 8);
+  ].sort((a, b) => b.t - a.t).slice(0, 12);
 
   return (
     <>
-      <div className="sec-h"><h2>The team (6 seats)</h2><div className="rule" /></div>
+      <div className="sec-h"><h2>The team ({db.users.length} seats)</h2><div className="rule" /></div>
       <div className="queue stagger">
         {db.users.map((u, i) => {
           const owned = db.contacts.filter((c) => c.owner === u.id).length;
@@ -46,17 +52,26 @@ function TeamPage() {
       </div>
 
       <div className="sec-h"><h2>Recent activity</h2><div className="rule" /></div>
-      <div className="queue stagger">
-        {acts.map((a, i) => (
-          <div key={i} className="qcard soon" style={{ ["--d" as string]: `${i * 0.03}s` }}>
-            <div className="spine" />
-            <div className="body">
-              <div className="row1"><span>{a.txt}</span></div>
-              <div className="meta"><span className="when">{fmtWhen(a.t)}</span></div>
+      {acts.length === 0 ? (
+        <div className="empty"><b>No activity yet</b>Start logging calls or scheduling appointments.</div>
+      ) : (
+        <div className="queue stagger">
+          {acts.map((a, i) => (
+            <div key={`${a.kind}-${a.id}`} className="qcard soon" style={{ ["--d" as string]: `${i * 0.03}s` }}>
+              <div className="spine" />
+              <div className="body">
+                <div className="row1"><span>{a.txt}</span></div>
+                <div className="meta"><span className="when">{fmtWhen(a.t)}</span></div>
+              </div>
+              {a.kind === "call" && (
+                <div className="acts">
+                  <button className="del-x" onClick={() => deleteCall(a.id)} title="Remove call log">×</button>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
