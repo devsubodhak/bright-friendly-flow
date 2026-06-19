@@ -33,6 +33,14 @@ export function AppShell() {
   const [modal, setModal] = useState<ModalState>({});
   opener = setModal;
 
+  const { dueBadge, apptBadge } = useMemo(() => {
+    const now = Date.now();
+    const today = new Date().toDateString();
+    const due = db.contacts.filter((c) => !c.doNotCall && c.nextCallAt && (c.nextCallAt < now || new Date(c.nextCallAt).toDateString() === today)).length;
+    const ap = db.appointments.filter((a) => a.status === "scheduled" && a.at >= now - DAY).length;
+    return { dueBadge: due, apptBadge: ap };
+  }, [db]);
+
   if (isLoading) {
     return (
       <div className="loader-screen">
@@ -56,14 +64,6 @@ export function AppShell() {
   }
 
   const me = user(db.currentUserId);
-
-  const { dueBadge, apptBadge } = useMemo(() => {
-    const now = Date.now();
-    const today = new Date().toDateString();
-    const due = db.contacts.filter((c) => !c.doNotCall && c.nextCallAt && (c.nextCallAt < now || new Date(c.nextCallAt).toDateString() === today)).length;
-    const ap = db.appointments.filter((a) => a.status === "scheduled" && a.at >= now - DAY).length;
-    return { dueBadge: due, apptBadge: ap };
-  }, [db]);
 
   const NavLink = ({ to, icon, label, badge }: { to: string; icon: ReactNode; label: string; badge?: number }) => (
     <Link to={to} className={pathname === to ? "on" : ""}>
