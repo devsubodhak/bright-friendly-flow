@@ -3,9 +3,8 @@ import {
   type ReactNode,
 } from "react";
 import type { Appointment, Contact, Call, DB, DispositionId, User } from "./types";
-import { getSupabaseClient } from "../supabase";
+import { supabase } from "../supabase";
 import { DAY, uid } from "./format";
-import { seed } from "./seed";
 
 interface ToastItem { id: string; msg: string }
 
@@ -82,45 +81,30 @@ export function CrmProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
-
     async function loadData() {
-      try {
-        const supabase = await getSupabaseClient();
-        const [usersResult, contactsResult, appointmentsResult, callsResult] = await Promise.all([
-          supabase.from("users").select("*"),
-          supabase.from("contacts").select("*"),
-          supabase.from("appointments").select("*"),
-          supabase.from("calls").select("*"),
-        ]);
+      const [
+        { data: users },
+        { data: contacts },
+        { data: appointments },
+        { data: calls },
+      ] = await Promise.all([
+        supabase.from('users').select('*'),
+        supabase.from('contacts').select('*'),
+        supabase.from('appointments').select('*'),
+        supabase.from('calls').select('*'),
+      ]);
 
-        const firstError =
-          usersResult.error ?? contactsResult.error ?? appointmentsResult.error ?? callsResult.error;
-        if (firstError) throw firstError;
-
-        const mappedUsers = (usersResult.data || []).map(mapUser);
-        if (cancelled) return;
-
-        setDb({
-          users: mappedUsers,
-          contacts: (contactsResult.data || []).map(mapContact),
-          appointments: (appointmentsResult.data || []).map(mapAppt),
-          calls: (callsResult.data || []).map(mapCall),
-          currentUserId: mappedUsers.length > 0 ? mappedUsers[0].id : "",
-        });
-      } catch (error) {
-        console.error("Unable to load Supabase CRM data", error);
-        if (!cancelled) setDb(seed());
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
+      const mappedUsers = (users || []).map(mapUser);
+      setDb({
+        users: mappedUsers,
+        contacts: (contacts || []).map(mapContact),
+        appointments: (appointments || []).map(mapAppt),
+        calls: (calls || []).map(mapCall),
+        currentUserId: mappedUsers.length > 0 ? mappedUsers[0].id : "",
+      });
+      setIsLoading(false);
     }
-
-    void loadData();
-
-    return () => {
-      cancelled = true;
-    };
+    loadData();
   }, []);
 
   const mutate = useCallback((fn: (d: DB) => DB) => {
@@ -155,32 +139,32 @@ export function CrmProvider({ children }: { children: ReactNode }) {
           return { ...d, contacts: d.contacts.map((x) => (x.id === c.id ? c : x)) };
         });
         toast(isNew ? "Contact added" : "Contact saved");
-        await (await getSupabaseClient()).from('contacts').upsert(mapToContactRow(c));
+        await supabase.from('contacts').upsert(mapToContactRow(c));
       },
       deleteContact: async (id) => {
         mutate((d) => ({ ...d, contacts: d.contacts.filter((c) => c.id !== id) }));
         toast("Contact deleted");
-        await (await getSupabaseClient()).from('contacts').delete().eq('id', id);
+        await supabase.from('contacts').delete().eq('id', id);
       },
       markApptDone: async (id) => {
         mutate((d) => ({ ...d, appointments: d.appointments.map((a) => (a.id === id ? { ...a, status: "done" } : a)) }));
         toast("Appointment done");
-        await (await getSupabaseClient()).from('appointments').update({ status: 'done' }).eq('id', id);
+        await supabase.from('appointments').update({ status: 'done' }).eq('id', id);
       },
       cancelAppointment: async (id) => {
         mutate((d) => ({ ...d, appointments: d.appointments.map((a) => (a.id === id ? { ...a, status: "cancelled" as const } : a)) }));
         toast("Appointment cancelled");
-        await (await getSupabaseClient()).from('appointments').update({ status: 'cancelled' }).eq('id', id);
+        await supabase.from('appointments').update({ status: 'cancelled' }).eq('id', id);
       },
       deleteAppointment: async (id) => {
         mutate((d) => ({ ...d, appointments: d.appointments.filter((a) => a.id !== id) }));
         toast("Appointment deleted");
-        await (await getSupabaseClient()).from('appointments').delete().eq('id', id);
+        await supabase.from('appointments').delete().eq('id', id);
       },
       deleteCall: async (id) => {
         mutate((d) => ({ ...d, calls: d.calls.filter((c) => c.id !== id) }));
         toast("Call log removed");
-        await (await getSupabaseClient()).from('calls').delete().eq('id', id);
+        await supabase.from('calls').delete().eq('id', id);
       },
       moveStage: async (cid, stage) => {
         let name = "";
@@ -192,7 +176,7 @@ export function CrmProvider({ children }: { children: ReactNode }) {
           }),
         }));
         toast(`${name} → ${stage}`);
-        await (await getSupabaseClient()).from('contacts').update({ stage }).eq('id', cid);
+        await supabase.from('contacts').update({ stage }).eq('id', cid);
       },
       saveCall: async ({ contact, disposition, note, nextCallAt, appointment }) => {
         const updatedContact: Contact = { ...contact, lastDisposition: disposition };
@@ -232,7 +216,6 @@ export function CrmProvider({ children }: { children: ReactNode }) {
         toast("Call logged");
 
         // Supabase updates
-        const supabase = await getSupabaseClient();
         await supabase.from('contacts').upsert(mapToContactRow(updatedContact));
         await supabase.from('calls').insert({
           id: newCall.id, contact_id: newCall.contactId, user_id: newCall.userId,
