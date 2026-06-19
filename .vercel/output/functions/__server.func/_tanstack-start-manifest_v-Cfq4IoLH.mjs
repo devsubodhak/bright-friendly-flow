@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Cy1G2Kt4.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Cfq4IoLH.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/__root.tsx",
@@ -9,37 +9,37 @@ var tsrStartManifest = () => ({ routes: {
 			"/pipeline",
 			"/team"
 		],
-		preloads: ["/assets/index-C7mCpolK.js"],
+		preloads: ["/assets/index-Bhp0H6rM.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-C7mCpolK.js"
+			src: "/assets/index-Bhp0H6rM.js"
 		} }]
 	},
 	"/": {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/index.tsx",
 		children: void 0,
-		preloads: ["/assets/routes-n1pNXjW8.js"]
+		preloads: ["/assets/routes-CddwMRNz.js"]
 	},
 	"/appointments": {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/appointments.tsx",
 		children: void 0,
-		preloads: ["/assets/appointments-BKUSDObI.js"]
+		preloads: ["/assets/appointments-DVfG9Wqx.js"]
 	},
 	"/contacts": {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/contacts.tsx",
 		children: void 0,
-		preloads: ["/assets/contacts-CD3goUSk.js"]
+		preloads: ["/assets/contacts-DTkTuZ-N.js"]
 	},
 	"/pipeline": {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/pipeline.tsx",
 		children: void 0,
-		preloads: ["/assets/pipeline-CWKRCpu5.js"]
+		preloads: ["/assets/pipeline-COfMmE_H.js"]
 	},
 	"/team": {
 		filePath: "C:/aaa web sites/bright-friendly-flow/src/routes/team.tsx",
 		children: void 0,
-		preloads: ["/assets/team-DxPZTy15.js"]
+		preloads: ["/assets/team-s8cHqF-u.js"]
 	}
 } });
 //#endregion

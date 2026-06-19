@@ -1,7 +1,7 @@
 import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
 import { c as fmtWhen, d as svc, m as useCrm, u as stageLabel } from "./store-CmcNzmGW.mjs";
-import { i as openLogCallModal, r as openContactModal } from "./AppShell-nlGmuDyo.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/contacts-BojD6nRz.js
+import { i as openLogCallModal, r as openContactModal } from "./AppShell-BiW-Rp45.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/contacts-gIMiUmcR.js
 var import_jsx_runtime = require_jsx_runtime();
 function ContactsPage() {
 	const { db, matchSearch, user, deleteContact } = useCrm();
