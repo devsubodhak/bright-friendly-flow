@@ -5,6 +5,7 @@ import {
 import type { Appointment, Contact, Call, DB, DispositionId, User } from "./types";
 import { supabase } from "../supabase";
 import { DAY, uid } from "./format";
+import { seed } from "./seed";
 
 interface ToastItem { id: string; msg: string }
 
@@ -81,30 +82,44 @@ export function CrmProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   useEffect(() => {
-    async function loadData() {
-      const [
-        { data: users },
-        { data: contacts },
-        { data: appointments },
-        { data: calls },
-      ] = await Promise.all([
-        supabase.from('users').select('*'),
-        supabase.from('contacts').select('*'),
-        supabase.from('appointments').select('*'),
-        supabase.from('calls').select('*'),
-      ]);
+    let cancelled = false;
 
-      const mappedUsers = (users || []).map(mapUser);
-      setDb({
-        users: mappedUsers,
-        contacts: (contacts || []).map(mapContact),
-        appointments: (appointments || []).map(mapAppt),
-        calls: (calls || []).map(mapCall),
-        currentUserId: mappedUsers.length > 0 ? mappedUsers[0].id : "",
-      });
-      setIsLoading(false);
+    async function loadData() {
+      try {
+        const [usersResult, contactsResult, appointmentsResult, callsResult] = await Promise.all([
+          supabase.from("users").select("*"),
+          supabase.from("contacts").select("*"),
+          supabase.from("appointments").select("*"),
+          supabase.from("calls").select("*"),
+        ]);
+
+        const firstError =
+          usersResult.error ?? contactsResult.error ?? appointmentsResult.error ?? callsResult.error;
+        if (firstError) throw firstError;
+
+        const mappedUsers = (usersResult.data || []).map(mapUser);
+        if (cancelled) return;
+
+        setDb({
+          users: mappedUsers,
+          contacts: (contactsResult.data || []).map(mapContact),
+          appointments: (appointmentsResult.data || []).map(mapAppt),
+          calls: (callsResult.data || []).map(mapCall),
+          currentUserId: mappedUsers.length > 0 ? mappedUsers[0].id : "",
+        });
+      } catch (error) {
+        console.error("Unable to load Supabase CRM data", error);
+        if (!cancelled) setDb(seed());
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
-    loadData();
+
+    void loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const mutate = useCallback((fn: (d: DB) => DB) => {
