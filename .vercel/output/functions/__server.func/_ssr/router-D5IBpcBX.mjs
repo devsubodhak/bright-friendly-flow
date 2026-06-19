@@ -1,10 +1,10 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
-import { n as CrmProvider } from "./store-tMte_h3I.mjs";
+import { n as CrmProvider } from "./store-DhJVG2kc.mjs";
 import { _ as useRouter, c as HeadContent, d as createRouter, g as Link, h as createRootRouteWithContext, m as createFileRoute, p as lazyRouteComponent, s as Scripts } from "../_libs/@tanstack/react-router+[...].mjs";
-import { t as AppShell } from "./AppShell-CUT35U9r.mjs";
+import { t as AppShell } from "./AppShell-DDLS_o5o.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-I9-dPLsJ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-D5IBpcBX.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-BdPhqZjd.css";
@@ -125,27 +125,27 @@ function RootComponent() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CrmProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppShell, {}) })
 	});
 }
-var $$splitComponentImporter$4 = () => import("./team-Ckh5AaDL.mjs");
+var $$splitComponentImporter$4 = () => import("./team-7xwZA_RC.mjs");
 var Route$4 = createFileRoute("/team")({
 	head: () => ({ meta: [{ title: "People & activity — Univerz CRM" }] }),
 	component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
-var $$splitComponentImporter$3 = () => import("./pipeline-2ByenjUW.mjs");
+var $$splitComponentImporter$3 = () => import("./pipeline-BsxiaIef.mjs");
 var Route$3 = createFileRoute("/pipeline")({
 	head: () => ({ meta: [{ title: "Pipeline — Univerz CRM" }] }),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-var $$splitComponentImporter$2 = () => import("./contacts-D3L6Es7C.mjs");
+var $$splitComponentImporter$2 = () => import("./contacts-B0fsCqLx.mjs");
 var Route$2 = createFileRoute("/contacts")({
 	head: () => ({ meta: [{ title: "Contacts — Univerz CRM" }] }),
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-var $$splitComponentImporter$1 = () => import("./appointments-B_G0N6t9.mjs");
+var $$splitComponentImporter$1 = () => import("./appointments-DFRE8lC1.mjs");
 var Route$1 = createFileRoute("/appointments")({
 	head: () => ({ meta: [{ title: "Appointments — Univerz CRM" }] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./routes-Bt58ikdh.mjs");
+var $$splitComponentImporter = () => import("./routes-B2C9cLku.mjs");
 var Route = createFileRoute("/")({
 	head: () => ({ meta: [{ title: "Today's calls — Univerz CRM" }] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
