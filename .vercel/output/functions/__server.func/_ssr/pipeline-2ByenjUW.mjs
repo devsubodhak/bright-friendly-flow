@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { d as svc, m as useCrm, o as STAGES } from "./store-DYE6C_dQ.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/pipeline-Oaif-g53.js
+import { d as svc, m as useCrm, o as STAGES } from "./store-tMte_h3I.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/pipeline-2ByenjUW.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function PipelinePage() {
