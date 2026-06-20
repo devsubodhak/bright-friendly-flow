@@ -1,4 +1,4 @@
 {
-  "installCommand": "npm install --omit=optional",
+  "installCommand": "npm install",
   "buildCommand": "NITRO_PRESET=vercel npm run build"
 }
